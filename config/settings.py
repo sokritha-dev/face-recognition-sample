@@ -1,4 +1,4 @@
 # config/settings.py
-MODEL_PATH = "assets/yolov8n.pt"
-EMBEDDING_THRESHOLD = 0.5
+EMBEDDING_THRESHOLD = 0.8
 DB_PATH = "assets/embeddings.db"
+LOGGER_DEBOUNCE_INTERVAL = 5.0  # seconds

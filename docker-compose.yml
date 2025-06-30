@@ -1,0 +1,12 @@
+
+services:
+  face-recognition:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: face-recognition-app
+    runtime: runc
+    devices:
+      - /dev/video0:/dev/video0  # ⬅️ Give access to webcam
+    stdin_open: true
+    tty: true
