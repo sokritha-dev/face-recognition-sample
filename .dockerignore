@@ -86,3 +86,6 @@ target/
 
 # VS Code
 .vscode/
+
+# cache
+__pycache__/

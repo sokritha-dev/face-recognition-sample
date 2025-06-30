@@ -1,0 +1,4 @@
+# requirements_local.txt
+black
+ruff
+pytest

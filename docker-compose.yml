@@ -1,12 +1,12 @@
-
+version: '3.9'
 services:
-  face-recognition:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: face-recognition-app
-    runtime: runc
+  face_recognition:
+    build: .
+    volumes:
+      - .:/app
     devices:
-      - /dev/video0:/dev/video0  # ⬅️ Give access to webcam
+      - "/dev/video0:/dev/video0"  # 🎥 Access webcam on host
+    environment:
+      - PYTHONUNBUFFERED=1
     stdin_open: true
     tty: true
