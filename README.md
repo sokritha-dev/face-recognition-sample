@@ -129,7 +129,7 @@ face-recognition/
 | Mode              | FPS     | Accuracy     | Notes                       |
 |-------------------|---------|--------------|-----------------------------|
 | Face Recognition  | ~12–16  | ≥ 95%        | ArcFace (buffalo_s)         |
-| With Spoofing     | ~6–7    | ~95% (2-class) | MiniFASNet (custom trained) |
+| With Spoofing     | ~6–7    | ~95% (2-class) | MiniFASNet (fine tuning)  |
 
 > Tested on **CPU only (AMD Ryzen AI 7)**  
 > ~200 real + 200 fake images (per your dataset)
@@ -164,4 +164,4 @@ MIT © 2025 Sokritha Yen
 ## 🙌 Credits
 
 - [InsightFace](https://github.com/deepinsight/insightface)
-- [MiniFASNet (Silent-Face-Anti-Spoofing)](https://github.com/ZitongYu/Face-Anti-Spoofing)
+- [MiniFASNet (Silent-Face-Anti-Spoofing)](https://github.com/minivision-ai/Silent-Face-Anti-Spoofing)
