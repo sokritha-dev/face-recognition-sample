@@ -1,117 +1,120 @@
-# 🧠 Real-Time Face Recognition System
+# 🧠 Real-Time Face Recognition & Anti-Spoofing System
 
-> Version: **v1.1.1**  
-> FPS: ~12–16 on CPU (buffalo_s)  
-> Accuracy: 80% - 95%  
+> Version: **v1.2.1**  
+> FPS: ~12–16 on CPU (`buffalo_s`)  
+> Accuracy: 95%+ (w/ anti-spoof model)
 
 ---
 
 ## 📌 Overview
 
-This is a real-time face recognition system built with:
+This is a real-time face recognition system with **optional anti-spoofing**, built using:
 
-- **InsightFace** for face detection and embedding  
-- **Cosine similarity** for matching against a local SQLite DB  
-- **OpenCV** for webcam access  
-- **Threading + queue** to increase frame freshness  
-- **Debouncing** to avoid redundant DB logs  
+- 🤖 **InsightFace** for face detection & embedding (SCRFD + ArcFace)
+- 🎭 **MiniFASNet** for spoof detection
+- ⚡ Cosine similarity for face matching
+- 📦 SQLite for local embedding + match logging
+- 🧵 Threaded webcam capture for smooth frame processing
+- 🔁 Debouncing to prevent noisy log entries
+- 🧑‍💻 Command-line interface for easy control
 
 ---
 
-## ✅ Features
+## ✅ Key Features
 
-- 🧠 Unified face detection & embedding (SCRFD + ArcFace)
-- 🚀 Real-time cosine similarity matching
+- 🧠 Unified face detection + embedding (SCRFD + ArcFace)
+- 🎭 Real-time spoof detection via MiniFASNet
 - 💾 SQLite logging (`name`, `confidence`, `timestamp`)
-- 🔁 Threaded webcam frame capture (non-blocking)
-- ⏱️ Time-based log debouncing to reduce noise
-- 🧩 Modular, readable architecture
-- 🐳 Docker & Docker Compose support
+- ⏱️ FPS counter, Timer profiler, Logger debouncer
+- 🔄 Thread-safe video capture
+- 🚀 Train spoof detection model with your own dataset
+- 🧩 Modular CLI system (register, capture, test)
 
 ---
 
-## 🔄 Version Comparison
+## 🔄 Version Timeline
 
-| Feature                    | v1.0.0                                   | v1.1.0                                   | v1.1.1                                                  |
-|----------------------------|------------------------------------------|------------------------------------------|---------------------------------------------------------|
-| Detection                  | YOLOv8-face                              | InsightFace (SCRFD)                      | InsightFace (SCRFD)                                     |
-| Embedding                  | ArcFace (buffalo_l / buffalo_s)         | ArcFace (buffalo_s)                      | ArcFace (buffalo_s)                                     |
-| FPS                        | ~4–6 (buffalo_l), ~8–11 (buffalo_s)      | ~12–16 (buffalo_s)                       | ~12–16 (buffalo_s)                                      |
-| Accuracy                   | <90%                                     | <90%                                     | **≥ 95%**                                               |
-| Logging                    | SQLite                                   | SQLite                                   | SQLite + **debounce**                                   |
-| Pipeline                   | 2-stage (YOLO → Embedder)               | Unified Detector + Embedder              | Unified + **Threaded Webcam + Debouncing**              |
-| Frame Freshness            | ❌ Blocking                              | ✅ Improved                              | ✅ + **Thread-safe**                                     |
-| Code Complexity            | Medium                                   | Low                                      | Slightly higher (threading + debounce)                 |
+| Version  | Improvements                                                 |
+|----------|--------------------------------------------------------------|
+| v1.0.0   | Basic YOLOv8 → ArcFace pipeline + SQLite logging             |
+| v1.1.0   | Unified InsightFace pipeline (SCRFD + ArcFace)               |
+| v1.1.1   | Threaded webcam + debouncing + faster DB logging             |
+| v1.2.1   | Anti-spoofing (MiniFASNet), CLI mode switch, self-training   |
 
 ---
 
-## 📊 Architecture (v1.1.1)
-
-```mermaid
-graph TD
-    A[Webcam [OpenCV]<br/>→ Thread A] --> Q[Queue]
-    Q --> B[Face Detection & Embedding<br/>[InsightFace - ArcFace]<br/>→ Main Thread]
-    B --> C[DB Embedding]
-    B --> D[Face Similarity [NumPy - Cosine]]
-    D --> E[logs (name, timestamp, confidence)<br/>+ Debounce]
-    E --> F[DB logging]
-```
-
----
-
-## 🚀 Quickstart
-
-### 📦 Prerequisites
-
-- Python 3.10+
-- Webcam (integrated or USB)
-- Docker (optional but recommended)
-
----
-
-### ▶️ Run Locally (Without Docker)
+## 🎮 CLI Usage
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run app
 python main.py
 ```
 
----
+You'll see an interactive menu:
 
-### 🐳 Run with Docker
-
-```bash
-# Build the container
-docker build -t face-recognition .
-
-# Run the container
-docker run --rm -it --device=/dev/video0 face-recognition
+### Mode selection:
+```
+1. Face Recognition Only
+2. Face Recognition + Anti-Spoofing
+3. Exit
 ```
 
-If using Docker Compose (with volume or env configs):
+Each mode provides options:
 
-```bash
-docker compose up --build
+#### 🟦 Recognition Mode:
+```
+1. Register face
+2. Test
+3. Go back
+```
+
+#### 🟥 Spoofing Mode:
+```
+1. Register face
+2. Capture real/fake and train
+3. Test
+4. Go back
 ```
 
 ---
 
-### 📁 Folder Structure
+## 🧪 Training Your Own Spoof Detection Model
+
+```bash
+# In CLI → Spoofing Mode → "Capture real/fake and train"
+```
+
+What it does:
+1. Opens webcam
+2. You press:
+   - `r` → save real image
+   - `f` → save fake image
+3. After capture, it trains MiniFASNet on the dataset
+
+Output: `models/anti_spoofing/minifasnet_custom_data.pth`
+
+---
+
+### 🎥 Demo: Real-time Face Recognition with Anti-Spoofing
+[![Watch the demo](https://img.youtube.com/vi/VwyVgw2Gph4/0.jpg)](https://youtu.be/VwyVgw2Gph4)
+
+
+## 🗂 Folder Structure
 
 ```bash
 face-recognition/
 │
-├── config/            # App settings
-├── core/              # Core logic (timing, FPS counter)
-├── db/                # SQLite, logger, face DB
-├── modules/           # Detection, embedding, matching
-├── utils/             # Helpers (draw, debounce, etc.)
+├── config/              # App settings
+├── core/                # FPSCounter, Timer, webcam manager
+├── db/                  # SQLite, face embedding + log DB
+├── modules/             # FaceDetector, Embedder, Matcher, Spoof model
+├── trainers/            # Fine-tuning logic (MiniFASNet)
+├── utils/               # Drawing, debouncer, etc.
 │
-├── main.py            # Entry point
-├── face_registration.py  # CLI to register new face
+├── main.py              # Entry point (CLI menu)
+├── run_recognition.py   # Handles recognition mode
+├── run_spoofing.py      # Handles spoofing mode
+├── face_registration.py # Register face with name
+├── collect_dataset.py   # CLI tool to collect real/fake spoof data
 ├── requirements.txt
 ├── requirements_local.txt
 ├── Dockerfile
@@ -121,45 +124,44 @@ face-recognition/
 
 ---
 
-## 🧪 Benchmarks
+## 📊 Performance Benchmarks
 
-| Model       | FPS     | Accuracy |
-|-------------|---------|----------|
-| buffalo_l   | ~4–6    | <90%     |
-| buffalo_s   | ~12–16  | ≥ 95%    |
+| Mode              | FPS     | Accuracy     | Notes                       |
+|-------------------|---------|--------------|-----------------------------|
+| Face Recognition  | ~12–16  | ≥ 95%        | ArcFace (buffalo_s)         |
+| With Spoofing     | ~6–7    | ~95% (2-class) | MiniFASNet (custom trained) |
 
-Tested on: **CPU (Intel Core i7 10th Gen)** — No GPU used.
-
----
-
-## 🔒 Privacy Note
-
-This app **does not store or transmit** any images or videos. Only face **embeddings and match logs** are stored locally for demo purposes.
+> Tested on **CPU only (AMD Ryzen AI 7)**  
+> ~200 real + 200 fake images (per your dataset)
 
 ---
 
-## 🧼 Dev Tools (optional)
+## 📸 Architecture
 
-In `requirements_local.txt`:
+![Architecture](./docs/face_pipeline_v121.png)
 
-- `black`: auto code formatter  
-- `ruff`: fast Python linter  
+---
 
-To install:
+## ⚙️ Dev Setup
 
 ```bash
+# Install base deps
+pip install -r requirements.txt
+
+# Optional: for dev tools
 pip install -r requirements_local.txt
 ```
 
 ---
 
-## 📋 TODOs
 
-- [ ] Add spoofing detection
-- [ ] Add unit tests and CI
+## 📝 License
+
+MIT © 2025 Sokritha Yen
 
 ---
 
-## 📜 License
+## 🙌 Credits
 
-MIT © 2025 Sokritha Yen
+- [InsightFace](https://github.com/deepinsight/insightface)
+- [MiniFASNet (Silent-Face-Anti-Spoofing)](https://github.com/ZitongYu/Face-Anti-Spoofing)

@@ -10,14 +10,14 @@ from utils.fps import FPSCounter
 from utils.timer import Timer
 
 
-def run_pipeline(cap, frame_queue):
+def run_pipeline(cap, frame_queue, is_enable_spoof_detection=False):
     # Initialize database connection
     db = connect_sqlite(DB_PATH)
     face_db = FaceDatabase(db)
     logger_db = MatchLoggerDB(db)
 
     # Initialize face recognizer and matcher
-    recognizer = FaceRecognizer(enable_spoof_detection=True)
+    recognizer = FaceRecognizer(enable_spoof_detection=is_enable_spoof_detection)
     fps = FPSCounter()
     logger_debouncer = LoggerDebouncer(LOGGER_DEBOUNCE_INTERVAL)
 

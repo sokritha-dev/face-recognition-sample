@@ -11,7 +11,9 @@ from models.mini_fasnet import (
 
 
 class AntiSpoofPredictor:
-    def __init__(self, model_path="minifasnet_finetuned.pth", device=None):
+    def __init__(
+        self, model_path="models/anti_spoofing/minifasnet_custom_data.pth", device=None
+    ):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.transform = transforms.Compose([transforms.ToTensor()])
 

@@ -18,6 +18,15 @@ def register_face():
         if not ret:
             break
 
+        cv2.putText(
+            frame,
+            "Press 'c' to capture face, or 'q' to quit...",
+            (10, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (255, 255, 255),
+            2,
+        )
         cv2.imshow("Register Face", frame)
         key = cv2.waitKey(1) & 0xFF
 
@@ -46,7 +55,3 @@ def register_face():
 
     cap.release()
     cv2.destroyAllWindows()
-
-
-if __name__ == "__main__":
-    register_face()

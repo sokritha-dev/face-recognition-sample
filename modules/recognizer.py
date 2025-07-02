@@ -47,9 +47,9 @@ class FaceRecognizer:
         x1, y1, x2, y2 = list(map(int, bbox))
         w, h = x2 - x1, y2 - y1
         # Visualize bounding box for debugging
-        debug_frame = frame.copy()
-        cv2.rectangle(debug_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.imwrite("debug_bbox.jpg", debug_frame)
+        # debug_frame = frame.copy()
+        # cv2.rectangle(debug_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        # cv2.imwrite("debug_bbox.jpg", debug_frame)
         label, confidence = self.spoof_detector.predict(frame, (x1, y1, w, h))
         return label == "real", confidence
 
