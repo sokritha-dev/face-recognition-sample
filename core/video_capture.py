@@ -16,6 +16,14 @@ def capture_loop(cap):
 
 def start_video_capture(process_fn):
     cap = cv2.VideoCapture(0)
+    cap.set(
+        cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG")
+    )  # Try forcing MJPG for better quality
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    print("Frame width:", cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    print("Frame height:", cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
     if not cap.isOpened():
         raise RuntimeError("Could not open video capture")
 

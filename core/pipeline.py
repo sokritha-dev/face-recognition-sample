@@ -17,7 +17,7 @@ def run_pipeline(cap, frame_queue):
     logger_db = MatchLoggerDB(db)
 
     # Initialize face recognizer and matcher
-    recognizer = FaceRecognizer()
+    recognizer = FaceRecognizer(enable_spoof_detection=True)
     fps = FPSCounter()
     logger_debouncer = LoggerDebouncer(LOGGER_DEBOUNCE_INTERVAL)
 
